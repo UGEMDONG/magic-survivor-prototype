@@ -2,12 +2,8 @@ using UnityEngine;
 
 public interface IWeapon
 {
-    public string AttackType { get; }
-
-    public float BaseDamage { get; }
-    public float CurrentDamage { get; }
+    public Vector2 AttackDirection { get; }
     public void Attack();
-    public void CoolDown(float deltaTime);
-    public void Damaging();
+    public void TickCoolTime(float deltaTime);
     public void SetAttackDirection(Vector2 direction);
 }
