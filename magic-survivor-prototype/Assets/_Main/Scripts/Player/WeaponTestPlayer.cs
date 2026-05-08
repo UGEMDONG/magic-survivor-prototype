@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class WeaponTestPlayer : MonoBehaviour,
 IExpReceiver
@@ -36,6 +37,12 @@ IExpReceiver
     private Vector2 directionToNearestEnemy = Vector2.zero;
     private Vector2 directionToMove = Vector2.zero;
 
+    private Rigidbody2D rb;
+    private bool moveLeft;
+    private bool moveRight;
+    private bool moveUp;
+    private bool moveDown;
+    private Vector2 moveDirection = Vector2.zero;
 
     TestEnemy GetNearestEnemy()
     {
@@ -63,10 +70,16 @@ IExpReceiver
     void Start()
     {
         ReceiveWeapon(weaponProvider.NameToIWeapon("Bow"));
+        rb = GetComponent<Rigidbody2D>();
     }
 
     void Update()
     {
+        moveLeft = Keyboard.current.aKey.isPressed;
+        moveRight = Keyboard.current.dKey.isPressed;
+        moveUp = Keyboard.current.wKey.isPressed;
+        moveDown = Keyboard.current.sKey.isPressed;
+
         nearestEnemy = GetNearestEnemy();
         SetAttackDirections();
 
@@ -85,5 +98,43 @@ IExpReceiver
                 }
             }
         }
+    }
+
+    void FixedUpdate()
+    {
+        if ((moveLeft && moveRight) || (moveLeft == false && moveRight == false))
+        {
+            moveDirection.x = 0;
+        }
+        else
+        {
+            if (moveLeft)
+            {
+                moveDirection.x = -1;
+            }
+            else if (moveRight)
+            {
+                moveDirection.x = 1;
+            }
+        }
+
+        if ((moveUp && moveDown) || (moveUp == false && moveDown == false))
+        {
+            moveDirection.y = 0;
+        }
+        else
+        {
+            if (moveUp)
+            {
+                moveDirection.y = 1;
+            }
+            else if (moveDown)
+            {
+                moveDirection.y = -1;
+            }
+        }
+
+        rb.linearVelocity = new Vector2(moveDirection.x * 5f, moveDirection.y * 5f);
+
     }
 }

@@ -2,7 +2,6 @@ using UnityEngine;
 
 public interface IWeapon
 {
-
     public string WeaponName { get; }
     public string DirectionType { get; }
     public Vector2 AttackDirection { get; }
