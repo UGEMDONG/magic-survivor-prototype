@@ -8,19 +8,16 @@ IExpReceiver
     // IExpReceiver
     private float exp = 0;
     public float Exp => exp;
-
-    // 경험치 구슬 쪽에서 사용
+    // 더미 데이터라서 구현하지 않음
     public void TakeExp(float amount)
     {
         return;
     }
-    
-    // 스킬 선택 UI 쪽에서 사용
     public void LevelUp()
     {
         return;
     }
-    //
+ 
 
     // IWeaponReceiver
     private List<IWeapon> weapons = new List<IWeapon>();
@@ -32,8 +29,61 @@ IExpReceiver
     }
     //
 
+    [SerializeField]
+    private WeaponProvider weaponProvider;
+    private TestEnemy[] enemies;
+    private TestEnemy nearestEnemy;
+    private Vector2 directionToNearestEnemy = Vector2.zero;
+    private Vector2 directionToMove = Vector2.zero;
+
+
+    TestEnemy GetNearestEnemy()
+    {
+        enemies = FindObjectsByType<TestEnemy>(FindObjectsSortMode.None);   
+        float minDistance = -1f;
+        TestEnemy nearestEnemy = null;
+        foreach (TestEnemy enemy in enemies)
+        {
+            float distance = Vector2.Distance(enemy.gameObject.transform.position, transform.position);
+            if (minDistance > distance || minDistance == -1)
+            {
+                minDistance = distance;
+                nearestEnemy = enemy;
+            }
+        }
+        return nearestEnemy;
+    }
+
+    void SetAttackDirections()
+    {
+        directionToNearestEnemy = (nearestEnemy.gameObject.transform.position - transform.position).normalized;
+        
+    }
+
     void Start()
     {
-        ReceiveWeapon();
+        ReceiveWeapon(weaponProvider.NameToIWeapon("Bow"));
+    }
+
+    void Update()
+    {
+        nearestEnemy = GetNearestEnemy();
+        SetAttackDirections();
+
+        foreach (IWeapon weapon in weapons)
+        {
+            weapon.TickCoolTime(Time.deltaTime);
+            if (weapon.IsAttackReady)
+            {
+                if (weapon.DirectionType == "NearestEnemy")
+                {
+                    if (nearestEnemy != null)
+                    {
+                        weapon.SetAttackDirection(directionToNearestEnemy);
+                        weapon.Attack(transform.position);
+                    }
+                }
+            }
+        }
     }
 }
