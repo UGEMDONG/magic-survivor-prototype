@@ -2,6 +2,7 @@ using UnityEngine;
 
 public interface IWeapon
 {
+    public string Name { get; }
     public Vector2 AttackDirection { get; }
     public float Damage { get; }
     public float AttackCoolTime { get; }
