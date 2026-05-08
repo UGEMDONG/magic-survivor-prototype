@@ -10,7 +10,7 @@ public interface IWeapon
     public float AttackCoolTime { get; }
     public float CurrentCoolTime { get; }
     public bool IsAttackReady { get; }
-    public void Attack();
+    public void Attack(Vector2 position);
     public void TickCoolTime(float deltaTime);
     public void SetAttackDirection(Vector2 direction);
 }
