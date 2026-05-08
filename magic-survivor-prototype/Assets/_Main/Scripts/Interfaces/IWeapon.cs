@@ -2,7 +2,9 @@ using UnityEngine;
 
 public interface IWeapon
 {
-    public string Name { get; }
+
+    public string WeaponName { get; }
+    public string DirectionType { get; }
     public Vector2 AttackDirection { get; }
     public float Damage { get; }
     public float AttackCoolTime { get; }
