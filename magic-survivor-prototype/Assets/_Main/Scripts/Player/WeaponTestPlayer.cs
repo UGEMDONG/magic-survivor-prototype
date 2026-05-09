@@ -2,6 +2,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+/*
+전체 흐름 요약
+1) IWeapon, IDamageable 같은 interface 로 역할을 약속.
+2) WeaponBase, AttackObjectBase 같은 abstract 로 공통 코드를 한 번만 작성.
+3) Bow, Burning, Arrow, Fire, TestEnemy 같은 구현체 클래스가 각자 자기 일만 함.
+4) 사용하는 쪽 (이 플레이어 클래스) 은 interface 만 알고도 전부 다 굴림.
+*/
 public class WeaponTestPlayer : MonoBehaviour,
 IExpReceiver
 {
@@ -21,6 +28,8 @@ IExpReceiver
  
 
     // IWeaponReceiver
+    // 여기 weapons 리스트의 타입이 구체 클래스(Bow, Burning) 가 아니라 IWeapon 이라는
+    // 점에 핵심. 어떤 무기든 IWeapon 이라는 약속만 지키면 이 리스트에 들어갈 수 있다.
     private List<IWeapon> weapons = new List<IWeapon>();
     public IReadOnlyList<IWeapon> Weapons { get; }
 
@@ -76,6 +85,7 @@ IExpReceiver
 
     void Start()
     {
+        // 무기를 이름으로 받아온다. 받아오는 쪽은 Bow 클래스, Burning 클래스 라는건 상관없다.
         ReceiveWeapon(weaponProvider.NameToIWeapon("Bow"));
         ReceiveWeapon(weaponProvider.NameToIWeapon("Burning"));
         rb = GetComponent<Rigidbody2D>();
@@ -91,6 +101,11 @@ IExpReceiver
         nearestEnemy = GetNearestEnemy();
         SetPlayerAttackDirections();
 
+        // 핵심
+        // 무기가 Bow 인지 Burning 인지 신경 쓰지 않는다.
+        // IWeapon 의 약속 (DirectionType, IsAttackReady, TickCoolTime, Attack ...) 만
+        // 가지고 모든 무기를 동일한 방식으로 굴린다.
+        // = 새 무기를 만들어 추가해도 이 코드는 절대 안 바뀐다.
         foreach (IWeapon weapon in weapons)
         {
             weapon.TickCoolTime(Time.deltaTime);
