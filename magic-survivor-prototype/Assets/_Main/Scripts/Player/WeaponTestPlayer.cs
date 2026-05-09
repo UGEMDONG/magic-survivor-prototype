@@ -63,8 +63,11 @@ IExpReceiver
 
     void SetPlayerAttackDirections()
     {
-        directionToNearestEnemy = (nearestEnemy.gameObject.transform.position - transform.position).normalized;
-        
+        if (nearestEnemy != null)
+        {
+            directionToNearestEnemy = (nearestEnemy.gameObject.transform.position - transform.position).normalized;
+            
+        }
         if (rb.linearVelocity != Vector2.zero)
         {
             directionToMove = (rb.linearVelocity - Vector2.zero).normalized;

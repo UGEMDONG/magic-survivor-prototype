@@ -27,6 +27,7 @@ public class Bow : MonoBehaviour, IWeapon
         arrowObject.transform.position = position;
         Arrow arrow = arrowObject.GetComponent<Arrow>();
         arrow.direction = attackDirection;
+        arrow.damage = damage;
         isAttackReady = false;
         currentCoolTime = attackCoolTime;
     }

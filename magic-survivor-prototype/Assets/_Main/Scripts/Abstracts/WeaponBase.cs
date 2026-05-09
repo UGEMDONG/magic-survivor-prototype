@@ -3,14 +3,17 @@ using UnityEngine;
 public class WeaponBase : MonoBehaviour, IWeapon
 {
     // IWeapon 구현
+    [SerializeField]
     protected string weaponName = "Classic";
     protected Vector2 attackDirection;
+    [SerializeField]
     protected string directionType = "MoveDirection";
+    [SerializeField]
     protected float damage = 20f;
     [SerializeField]
     protected float attackCoolTime = 0f;
     protected float currentCoolTime;
-    protected bool isAttackReady;
+    protected bool isAttackReady = false;
 
     public string WeaponName => weaponName;
     public Vector2 AttackDirection => attackDirection;

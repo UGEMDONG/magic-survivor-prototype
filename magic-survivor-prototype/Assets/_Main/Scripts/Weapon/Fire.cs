@@ -1,16 +1,11 @@
 using UnityEngine;
 
-public class Fire : MonoBehaviour
+public class Fire : AttackObjectBase
 {
-    public Vector2 direction;
-    [SerializeField]
-    public float speed = 0f;
-    public Rigidbody2D rb;
-    public float lifeTime = 3f; 
-
-    void Start()
+    protected override void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
+        base.Start();
+        lifeTime = 1f;
     }
 
     void Update()
@@ -20,11 +15,5 @@ public class Fire : MonoBehaviour
         {
             Destroy(gameObject);
         }
-    }
-
-    void FixedUpdate()
-    {
-        rb.linearVelocity = new Vector2(direction.x * speed, direction.y * speed);
-        
     }
 }

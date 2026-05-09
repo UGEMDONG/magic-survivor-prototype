@@ -13,10 +13,11 @@ public class WeaponProvider : MonoBehaviour, IWeaponProvider
         {
             if (weapon.WeaponName == weaponName)
             {
+                Debug.Log($"return {weaponName}");
                 return weapon;
             }
         }
-
+        Debug.Log($"null {weaponName}");
         return null;
     }
 

@@ -9,6 +9,7 @@ public class Burning : WeaponBase
     private int currentNextFiringTick = 0;
     public override void Attack(Vector2 position)
     {
+        Debug.Log(attackCoolTime);
         currentNextFiringTick += 1;
         if (currentNextFiringTick >= nextFiringTick)
         {
@@ -20,26 +21,17 @@ public class Burning : WeaponBase
                 isAttackReady = false;
                 currentCoolTime = attackCoolTime;
             }
-            Debug.Log(attackDirection);
             GameObject fireObject = Instantiate(firePrefab);
             fireObject.transform.position = position;
             float angle = Vector2.SignedAngle(new Vector2(0, 1), attackDirection);
             fireObject.transform.Rotate(0f, 0f, angle);
             Fire fire = fireObject.GetComponent<Fire>();
             fire.direction = attackDirection;
+            fire.damage = damage;
         }
     }
 
 
     [SerializeField]
     private GameObject firePrefab;
-
-    protected override void Start()
-    {
-        weaponName = "Burning";
-        damage = 10f;
-        attackCoolTime = 5f;
-
-        base.Start();
-    }
 }

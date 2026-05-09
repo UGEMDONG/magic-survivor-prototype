@@ -1,16 +1,16 @@
 using UnityEngine;
 
-public class Arrow : MonoBehaviour
+public class Arrow : AttackObjectBase
 {
 
-    public Vector2 direction;
-    [SerializeField]
-    public float speed = 5f;
     public Rigidbody2D rb;
 
-    void Start()
+    protected override void Start()
     {
+        base.Start();
         rb = GetComponent<Rigidbody2D>();
+        speed = 5f;
+        lifeTime = 20f;
     }
 
     void FixedUpdate()

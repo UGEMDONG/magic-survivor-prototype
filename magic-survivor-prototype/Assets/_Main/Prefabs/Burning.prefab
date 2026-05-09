@@ -44,5 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57c7952940fbaf34dbf6711ca3e6557b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Burning
-  attackCoolTime: 0
+  weaponName: Burning
+  directionType: MoveDirection
+  damage: 10
+  attackCoolTime: 5
   firePrefab: {fileID: 1515916731042716504, guid: da7a43c1fc523f2428497f57af5ffd69, type: 3}
