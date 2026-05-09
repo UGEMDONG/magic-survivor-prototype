@@ -35,14 +35,14 @@ IExpReceiver
     private TestEnemy[] enemies;
     private TestEnemy nearestEnemy;
     private Vector2 directionToNearestEnemy = Vector2.zero;
-    private Vector2 directionToMove = Vector2.zero;
+    private Vector2 directionToMove = new Vector2(0, 1);
 
     private Rigidbody2D rb;
     private bool moveLeft;
     private bool moveRight;
     private bool moveUp;
     private bool moveDown;
-    private Vector2 moveDirection = Vector2.zero;
+    private Vector2 inputDirection = Vector2.zero;
 
     TestEnemy GetNearestEnemy()
     {
@@ -61,15 +61,20 @@ IExpReceiver
         return nearestEnemy;
     }
 
-    void SetAttackDirections()
+    void SetPlayerAttackDirections()
     {
         directionToNearestEnemy = (nearestEnemy.gameObject.transform.position - transform.position).normalized;
         
+        if (rb.linearVelocity != Vector2.zero)
+        {
+            directionToMove = (rb.linearVelocity - Vector2.zero).normalized;
+        }
     }
 
     void Start()
     {
         ReceiveWeapon(weaponProvider.NameToIWeapon("Bow"));
+        ReceiveWeapon(weaponProvider.NameToIWeapon("Burning"));
         rb = GetComponent<Rigidbody2D>();
     }
 
@@ -81,7 +86,7 @@ IExpReceiver
         moveDown = Keyboard.current.sKey.isPressed;
 
         nearestEnemy = GetNearestEnemy();
-        SetAttackDirections();
+        SetPlayerAttackDirections();
 
         foreach (IWeapon weapon in weapons)
         {
@@ -96,6 +101,11 @@ IExpReceiver
                         weapon.Attack(transform.position);
                     }
                 }
+                else if (weapon.DirectionType == "MoveDirection")
+                {
+                    weapon.SetAttackDirection(directionToMove);
+                    weapon.Attack(transform.position);
+                }
             }
         }
     }
@@ -104,37 +114,37 @@ IExpReceiver
     {
         if ((moveLeft && moveRight) || (moveLeft == false && moveRight == false))
         {
-            moveDirection.x = 0;
+            inputDirection.x = 0;
         }
         else
         {
             if (moveLeft)
             {
-                moveDirection.x = -1;
+                inputDirection.x = -1;
             }
             else if (moveRight)
             {
-                moveDirection.x = 1;
+                inputDirection.x = 1;
             }
         }
 
         if ((moveUp && moveDown) || (moveUp == false && moveDown == false))
         {
-            moveDirection.y = 0;
+            inputDirection.y = 0;
         }
         else
         {
             if (moveUp)
             {
-                moveDirection.y = 1;
+                inputDirection.y = 1;
             }
             else if (moveDown)
             {
-                moveDirection.y = -1;
+                inputDirection.y = -1;
             }
         }
 
-        rb.linearVelocity = new Vector2(moveDirection.x * 5f, moveDirection.y * 5f);
+        rb.linearVelocity = new Vector2(inputDirection.x * 5f, inputDirection.y * 5f);
 
     }
 }

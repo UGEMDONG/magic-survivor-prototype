@@ -23,7 +23,6 @@ public class Bow : MonoBehaviour, IWeapon
 
     public void Attack(Vector2 position)
     {
-        Debug.Log(attackDirection);
         GameObject arrowObject = Instantiate(arrowPrefab);
         arrowObject.transform.position = position;
         Arrow arrow = arrowObject.GetComponent<Arrow>();
