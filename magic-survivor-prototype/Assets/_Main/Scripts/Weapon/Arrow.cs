@@ -44,6 +44,4 @@ public class Arrow : AttackObjectBase
         hitDamageableObject.TakeDamage(damage);
         Destroy(gameObject);
     }
-
-
 }

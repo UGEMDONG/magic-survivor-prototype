@@ -47,11 +47,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c00d7e599bc2d1499bc7a8b0389d524, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Fire
-  damage: 0
+  damage: 40
   direction: {x: 0, y: 0}
-  speed: 0
-  attackCollider: {fileID: 0}
-  lifeTime: 0.5
+  speed: 4
+  attackCollider: {fileID: 3329567889255596363}
+  lifeTime: 1.5
 --- !u!50 &505390070063098953
 Rigidbody2D:
   serializedVersion: 5

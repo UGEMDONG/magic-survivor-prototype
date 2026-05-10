@@ -11,19 +11,17 @@ Arrow / Fire 입장에서는 이 클래스를 전혀 몰라도 된다.
 */
 public class TestEnemy : MonoBehaviour, IDamageable
 {
-    private Vector2 position;
-    public Vector2 Position => position;
-
+    // 제발 프로퍼티는 밑에 분리해서 써주세요... 쌰갈
     private Collider2D hitCollider2D;
-    public Collider2D HitCollider2D => hitCollider2D;
-
-    private float maxHp = 100f;
-    public float MaxHp => maxHp;
-
-    private float currentHp;
-    public float CurrentHp => currentHp;
-
+    [SerializeField] private float maxHp = 100f;
+    [SerializeField] private float currentHp;
     private bool isDead = false;
+    [SerializeField] JohnNaSimpleHpBar hpBar;
+
+    public Vector2 Position => transform.position;
+    public float MaxHp => maxHp;
+    public Collider2D HitCollider2D => hitCollider2D;
+    public float CurrentHp => currentHp;
     public bool IsDead => isDead;
     
     void Start()
@@ -36,7 +34,8 @@ public class TestEnemy : MonoBehaviour, IDamageable
     public void TakeDamage(float amount)
     {
         currentHp -= amount;
-        Debug.Log(currentHp);
+        // Debug.Log(currentHp);
+        hpBar.SetValue(currentHp / maxHp);
         if (currentHp <= 0)
         {
             Die();
@@ -44,6 +43,7 @@ public class TestEnemy : MonoBehaviour, IDamageable
     }
     public void Die()
     {
+        hpBar.SetValue(0f); // 의미 없긴해..
         Destroy(gameObject);
     }
 }

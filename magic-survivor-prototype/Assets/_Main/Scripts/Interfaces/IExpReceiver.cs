@@ -12,7 +12,7 @@ using UnityEngine;
 //   - 무기를 건네주는 쪽:      IWeaponReceiver 로만 봐도 ReceiveWeapon 호출 가능
 // 이렇게 보는 시점에 따라 "필요한 약속만" 가져다 쓸 수 있게 된다.
 // =============================================================================
-public interface IExpReceiver: IWeaponReceiver
+public interface IExpReceiver//: IWeaponReceiver
 {
     public float Exp { get; }
 

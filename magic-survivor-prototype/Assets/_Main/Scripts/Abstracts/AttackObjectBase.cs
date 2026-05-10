@@ -23,6 +23,8 @@ abstract 만 단독으로 쓰는 것도 충분히 자연스러운 패턴이다.
 */
 public abstract class AttackObjectBase: MonoBehaviour
 {
+    public IWeapon owner; // 지금은 퍼블릭인데 나중에 protected로 초기화로 할당
+
     // ↓ Arrow, Fire 가 둘 다 필요로 하는 데이터들을 여기서 한 번만 정의한다.
     public float damage;
     public Vector2 direction;
