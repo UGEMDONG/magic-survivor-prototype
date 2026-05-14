@@ -1096,6 +1096,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d69688e7af505754d816089ca721f667, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponTestPlayer
+  weaponHolder: {fileID: 0}
   weaponProvider: {fileID: 699680126}
 --- !u!212 &1748188284
 SpriteRenderer:
