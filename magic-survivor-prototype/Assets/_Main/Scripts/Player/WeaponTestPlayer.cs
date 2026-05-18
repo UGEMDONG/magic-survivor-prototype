@@ -14,19 +14,26 @@ public class WeaponTestPlayer : MonoBehaviour,IExpReceiver
 
     // IExpReceiver
     private float exp = 0;
+    private int level = 1;
     public float Exp => exp;
     public float MaxExp => 100;
-    public int Level => 1;
+    public int Level => level;
 
     [SerializeField] private WeaponHolder weaponHolder;
 
     // 더미 데이터라서 구현하지 않음
     public void TakeExp(float amount)
     {
-        return;
+        exp += amount;
+        if (exp >= MaxExp)
+        {
+            exp = 0;
+            LevelUp();
+        }
     }
     public void LevelUp()
     {
+        level += 1;
         return;
     }
  

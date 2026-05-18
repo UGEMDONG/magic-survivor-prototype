@@ -48,7 +48,7 @@ public class ExpOrbSpawner : MonoBehaviour
         if (currentCooldown > spawnCooldown)
         {
             currentCooldown = 0f;
-            Vector2 spawnPosition = new Vector2(Random.Range(-30f, 30f), Random.Range(-30f, 30f));
+            Vector2 spawnPosition = new Vector2(Random.Range(-10f, 10f), Random.Range(-10f, 10f));
             SpawnExpOrb(spawnPosition, Random.Range(1, 4));
         }
     }
