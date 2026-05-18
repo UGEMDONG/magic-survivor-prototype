@@ -3,13 +3,16 @@ using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
 {
-    public enum HUDState { Exp, Level,money,Time }
+    public enum HUDState { Exp, Level,Time }
     public HUDState type;
     [SerializeField] Text text;
     [SerializeField] Slider slider;
-    [SerializeField] UITestPlayer player;
+    [SerializeField] GameObject playerObj;
+    private IExpReceiver player;
+
     void Awake()
     {
+        player = playerObj.GetComponent<IExpReceiver>();
     }
 
     private void Update()
@@ -22,11 +25,8 @@ public class HUD : MonoBehaviour
             case HUDState.Level:
                 text.text = string.Format("Lv.{0:F0}", player.Level);
                 break;
-            case HUDState.money:
-                    text.text = string.Format("Money:{0:F0}", player.Money); 
-                break;
             case HUDState.Time:
-                // 시간은 어캐해야할지 모르겠음
+                            text.text = string.Format("Time:{0:F2}", Time.time);
                 break;
         }
     }

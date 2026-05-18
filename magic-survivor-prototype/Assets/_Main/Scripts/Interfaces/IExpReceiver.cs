@@ -15,6 +15,8 @@ using UnityEngine;
 public interface IExpReceiver: IWeaponReceiver
 {
     public float Exp { get; }
+    public float MaxExp { get; }
+    public int Level { get; }
 
     // 경험치 구슬 쪽에서 사용
     public void TakeExp(float amount);

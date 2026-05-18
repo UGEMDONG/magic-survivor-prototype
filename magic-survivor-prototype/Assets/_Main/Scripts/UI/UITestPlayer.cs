@@ -1,36 +1,62 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
 
-public class UITestPlayer : MonoBehaviour
+public class UITestPlayer : MonoBehaviour , IExpReceiver
 {
-    public int Exp = 0;
-    public int MaxExp = 100;
-    public int Level = 1;
-    public int Money = 10;
+    public float exp = 0;
+    public float maxExp = 100;
+    public int level = 1;
     public GameObject SkillPanel;
+    public float Exp
+    {
+        get
+        {
+            return exp;
+        }
+        // set
+        // {
+        //     exp = value;
+        // }
+    }
 
+    //     player.Exp = 0;  ìš°ì¸¡ê°’ì´ setter ì˜ value ë¡œ ë“¤ì–´ê°„ë‹¤.
+    // ê²½í—˜ì¹˜ êµ¬ìŠ¬ ìª½ì—ì„œ ì‚¬ìš©
+    public IReadOnlyList<IWeapon> Weapons
+    {
+        get
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+    public void ReceiveWeapon(IWeapon weapon)
+    {
+        throw new System.NotImplementedException();
+    }
+    public float MaxExp => maxExp;
+    public int Level => level;
+
+    public void TakeExp(float amount)
+    {
+        exp += amount;
+    }
+    
+    // ìŠ¤í‚¬ ì„ íƒ UI ìª½ì—ì„œ ì‚¬ìš©
+    public void LevelUp()
+    {
+            level += 1;
+    }
     void Update()
     {
-        // Áõ°¡ Å×½ºÆ®
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
-            Exp += 10;
-        }else if (Keyboard.current.qKey.wasPressedThisFrame)
-        {
-            Level += 1;
+            TakeExp(20);
         }
-        else if (Keyboard.current.wKey.wasPressedThisFrame)
-        {
-            Money += 50;
-        }
-        // ·¹º§¾÷ Ã¼Å©
         if (Exp >= MaxExp)
         {
-            Exp = 0;
-            MaxExp += 50;
-            Level++;
-            Debug.Log("·¹º§¾÷! ÇöÀç ·¹º§: " + Level);
-
+            LevelUp();
+            exp = 0;
+            Debug.Log("Level Up! Current Level: " + Level);
         }
     }
 }
