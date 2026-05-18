@@ -1,85 +1,60 @@
 using UnityEngine;
 
-/*
-이 코드는 는 IWeapon 의 첫 구현체입니다.
-처음에는 WeaponBase (abstract) 같은 공통 부모가 없었기 때문에,
-IWeapon 에서 미리 정한 약속만을 보고 모든 항목을 처음부터 직접 구현해야 했습니다.
-
-interface 는 무조건 해당 내용을 구현해야한다는 약속이기 때문에
-IWeapon 에 적힌 프로퍼티(WeaponName, Damage 등) 와 메서드(Attack, TickCoolTime 등)
-를 빠짐없이 직접 채워야 컴파일 에러가 안납니다.
-이게 바로 interface 가 가진 약속 강제력입니다.
-
-그런데 다른 무기를 또 만들고싶으면?
-다음 무기(예: Burning) 도 똑같이 weaponName, damage, attackCoolTime, currentCoolTime,
-TickCoolTime, SetAttackDirection ... 을 처음부터 다 구현해야합니다.
-거의 똑같은 코드를 여러 무기마다 반복해서 작성하게 되는데, 
-이 반복을 줄이기 위해 abstract 클래스(WeaponBase) 를 작성하게 되었습니다.
-(WeaponBase.cs 의 설명 참고)
-*/
-public class Bow : MonoBehaviour, IWeapon
+// IWeapon을 간편화 하면서 외부와의 결합도를 낮췄다, 그렇다고 해서 당연히 WeaponBase추상이 복잡해진 것도 아님
+// 하지만 자연스레 클래스 WeaponBase를 받는 것이 기본적인 무기의 기준이 됨. Bow는 특이하긴 해도 공격을 완전히 구현하고, 또 쿨탐 메서드를 재사용 하지 못하는건 아쉽다고 봄.
+// 이제 IWeapon은 단순히 문제 없이 무기를 다룰 수 있게 해주는 인터페이스 ((갠적으로 클래스는 곧 정체성이라고 생각해서 웬만한 무기는 추상 상속이 맞는듯
+public class Bow : WeaponBase//MonoBehaviour, IWeapon
 {
+    [Header("Bow Fields")]
+    [SerializeField] TestEnemy enemy;
+    [SerializeField] protected float attackRange = 10f;
 
-    // IWeapon 구현
-    // IWeapon 에서 약속한 것들을 전부 직접 들고 있는 구조.
-    private string weaponName = "Bow";
-    private Vector2 attackDirection;
-    private string directionType = "NearestEnemy";
-    private float damage = 50f;
-    [SerializeField]
-    private float attackCoolTime = 1f;
-    private float currentCoolTime;
-    private bool isAttackReady;
-
-    public string WeaponName => weaponName;
-    public Vector2 AttackDirection => attackDirection;
-    public string DirectionType => directionType;
-    public float Damage => damage;
-    public float AttackCoolTime => attackCoolTime;
-    public float CurrentCoolTime => currentCoolTime;
-    public bool IsAttackReady => isAttackReady;
-
-    // Bow 만의 고유 동작: 화살을 생성해서 날린다.
-    // 이 무기를 사용하는 쪽은 Attack()의 내부 구현이 어떻든 간에 
-    // IWeapon 에 Attack() 매서드가 존재한다는 것만 알면 된다.
-    public void Attack(Vector2 position)
+    public override void TryAttack()
     {
+        Vector2 dir = GetAttackDirection();
+        if (dir == Vector2.zero) return;
+
         GameObject arrowObject = Instantiate(arrowPrefab);
-        arrowObject.transform.position = position;
+        arrowObject.transform.position = transform.position;
         Arrow arrow = arrowObject.GetComponent<Arrow>();
-        arrow.direction = attackDirection;
+        arrow.direction = dir;
         arrow.damage = damage;
-        isAttackReady = false;
-        currentCoolTime = attackCoolTime;
     }
 
-    // 쿨타임 돌리는 매서드. Burning 등 다른 무기에서도 거의 똑같이 반복된다.
-    // 이런 매서드처럼 여러 무기에서 똑같이 쓰는 코드 가 바로 abstract 로 묶기 좋은 후보다.
-    public void TickCoolTime(float deltaTime)
+
+    protected override Vector2 GetAttackDirection()
     {
-        if (isAttackReady) return;
-
-        currentCoolTime -= deltaTime;
-        if (currentCoolTime <= 0)
-        {
-            isAttackReady = true;
-        }
+        if (!enemy) return Vector2.zero;
+        return (enemy.transform.position - transform.position).normalized;
     }
 
-    public void SetAttackDirection(Vector2 direction)
-    {
-        attackDirection = direction;
-    }
-    
 
     [SerializeField]
     private GameObject arrowPrefab;
 
-    void Start()
+    protected override void Start()
     {
-        currentCoolTime = attackCoolTime;
+        base.Start();
     }
 
+    public override void Initialize(WeaponHolder weaponHolder)
+    {
+        base.Initialize(weaponHolder);
+    }
 
+    public override void Tick(float deltaTime)
+    {
+        base.Tick(deltaTime);
+        var sense = Physics2D.OverlapCircle(transform.position, attackRange, 1 << LayerMask.NameToLayer("Enemy"));
+        if (sense != null && sense.TryGetComponent<TestEnemy>(out TestEnemy enemy))
+        {
+            this.enemy = enemy;
+        }
+        else this.enemy = null;
+    }
 
+    public override void Upgrade()
+    {
+        base.Upgrade();
+    }
 }

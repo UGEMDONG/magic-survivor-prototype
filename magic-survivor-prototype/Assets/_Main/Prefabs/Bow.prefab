@@ -44,5 +44,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f57a446ad8bd1b34b93faec505fbb015, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bow
+  owner: {fileID: 0}
+  weaponName: Bow
+  directionType: 2
+  damage: 20
   attackCoolTime: 1
+  enemy: {fileID: 0}
+  attackRange: 10
   arrowPrefab: {fileID: 4452277152349867592, guid: 4709031569aee274c9ad404d7482f071, type: 3}

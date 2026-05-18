@@ -17,6 +17,9 @@ public class WeaponTestPlayer : MonoBehaviour,IExpReceiver
     public float Exp => exp;
     public float MaxExp => 100;
     public int Level => 1;
+
+    [SerializeField] private WeaponHolder weaponHolder;
+
     // 더미 데이터라서 구현하지 않음
     public void TakeExp(float amount)
     {
@@ -31,14 +34,7 @@ public class WeaponTestPlayer : MonoBehaviour,IExpReceiver
     // IWeaponReceiver
     // 여기 weapons 리스트의 타입이 구체 클래스(Bow, Burning) 가 아니라 IWeapon 이라는
     // 점에 핵심. 어떤 무기든 IWeapon 이라는 약속만 지키면 이 리스트에 들어갈 수 있다.
-    private List<IWeapon> weapons = new List<IWeapon>();
     public IReadOnlyList<IWeapon> Weapons { get; }
-
-    public void ReceiveWeapon(IWeapon weapon)
-    {
-        weapons.Add(weapon);
-    }
-    //
 
     [SerializeField]
     private WeaponProvider weaponProvider;
@@ -86,10 +82,12 @@ public class WeaponTestPlayer : MonoBehaviour,IExpReceiver
 
     void Start()
     {
-        // 무기를 이름으로 받아온다. 받아오는 쪽은 Bow 클래스, Burning 클래스 라는건 상관없다.
-        ReceiveWeapon(weaponProvider.NameToIWeapon("Bow"));
-        ReceiveWeapon(weaponProvider.NameToIWeapon("Burning"));
+        if (weaponHolder == null)
+        {
+            weaponHolder = GetComponent<WeaponHolder>();
+        }
         rb = GetComponent<Rigidbody2D>();
+        GetComponent<SpriteRenderer>().sortingOrder = 10;   // 플레이어 안가려지게
     }
 
     void Update()
@@ -101,32 +99,6 @@ public class WeaponTestPlayer : MonoBehaviour,IExpReceiver
 
         nearestEnemy = GetNearestEnemy();
         SetPlayerAttackDirections();
-
-        // 핵심
-        // 무기가 Bow 인지 Burning 인지 신경 쓰지 않는다.
-        // IWeapon 의 약속 (DirectionType, IsAttackReady, TickCoolTime, Attack ...) 만
-        // 가지고 모든 무기를 동일한 방식으로 굴린다.
-        // = 새 무기를 만들어 추가해도 이 코드는 절대 안 바뀐다.
-        foreach (IWeapon weapon in weapons)
-        {
-            weapon.TickCoolTime(Time.deltaTime);
-            if (weapon.IsAttackReady)
-            {
-                if (weapon.DirectionType == "NearestEnemy")
-                {
-                    if (nearestEnemy != null)
-                    {
-                        weapon.SetAttackDirection(directionToNearestEnemy);
-                        weapon.Attack(transform.position);
-                    }
-                }
-                else if (weapon.DirectionType == "MoveDirection")
-                {
-                    weapon.SetAttackDirection(directionToMove);
-                    weapon.Attack(transform.position);
-                }
-            }
-        }
     }
 
     void FixedUpdate()
@@ -164,6 +136,9 @@ public class WeaponTestPlayer : MonoBehaviour,IExpReceiver
         }
 
         rb.linearVelocity = new Vector2(inputDirection.x * 5f, inputDirection.y * 5f);
-
+        if (weaponHolder != null)
+        {
+            weaponHolder.SetMoveDirection(inputDirection);
+        }
     }
 }

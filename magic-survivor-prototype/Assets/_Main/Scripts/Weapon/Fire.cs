@@ -18,4 +18,15 @@ public class Fire : AttackObjectBase
         base.Start();
         lifeTime = 1f;
     }
+    protected override void Update()
+    {
+        base.Update();
+        if (owner != null)
+            transform.position = owner.Position;
+    }
+    protected override void OnTriggerEnter2D(Collider2D hitCollider)
+    {
+        base.OnTriggerEnter2D(hitCollider);
+        // Debug.Log(hitCollider.name);
+    }
 }
