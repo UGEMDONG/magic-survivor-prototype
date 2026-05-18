@@ -9,13 +9,14 @@ using UnityEngine.InputSystem;
 3) Bow, Burning, Arrow, Fire, TestEnemy 같은 구현체 클래스가 각자 자기 일만 함.
 4) 사용하는 쪽 (이 플레이어 클래스) 은 interface 만 알고도 전부 다 굴림.
 */
-public class WeaponTestPlayer : MonoBehaviour,
-IExpReceiver
+public class WeaponTestPlayer : MonoBehaviour,IExpReceiver
 {
 
     // IExpReceiver
     private float exp = 0;
     public float Exp => exp;
+    public float MaxExp => 100;
+    public int Level => 1;
 
     [SerializeField] private WeaponHolder weaponHolder;
 
